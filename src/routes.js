@@ -9,7 +9,9 @@ export const routes = [
     method: 'GET',
     path: buildRoutePath('/categorias'),
     handler: (req, res) => {
-      const categorias = database.select('categorias');
+      const { search } = req.query;
+
+      const categorias = database.select('categorias', search ? { nome: search } : null);
 
       return res.end(JSON.stringify({ categorias }));
     },
