@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto';
 import http from 'node:http';
 import { json } from './middlewares/json.js';
 import { Database } from './database.js';
+import { routes } from './routes.js';
 
 const database = new Database();
 
@@ -10,25 +10,12 @@ const server = http.createServer(async (req, res) => {
 
   await json(req, res);
 
-  if (method === 'GET' && url === '/categorias') {
-    const categoria = database.select('categorias');
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url;
+  });
 
-    return res.end(JSON.stringify(categoria));
-  }
-
-  if (method === 'POST' && url === '/categorias') {
-    const { nome } = req.body;
-
-    const categoriaId = randomUUID();
-
-    const categoria = {
-      id: categoriaId,
-      nome,
-    };
-
-    database.insert('categorias', categoria);
-
-    return res.writeHead(201).end(JSON.stringify({ categoriaId }));
+  if (route) {
+    return route.handler(req, res);
   }
 
   return res.writeHead(404).end();
