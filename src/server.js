@@ -1,5 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import http from 'node:http';
+import { stringify } from 'node:querystring';
+
+const database = [];
 
 const server = http.createServer((req, res) => {
   const { method, url } = req;
@@ -11,6 +14,22 @@ const server = http.createServer((req, res) => {
     };
 
     return res.setHeader('Content-Type', 'application/json').end(JSON.stringify(categoria));
+  }
+
+  if (method === 'POST' && url === '/categorias') {
+    const categoriaId = randomUUID();
+
+    const categoria = {
+      id: categoriaId,
+      nome: 'transporte',
+    };
+
+    database.push(categoria);
+
+    return res
+      .setHeader('Content-Type', 'application/json')
+      .writeHead(201)
+      .end(JSON.stringify({ categoriaId }));
   }
 
   return res.writeHead(404).end();
