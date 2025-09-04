@@ -1,8 +1,5 @@
 import { randomUUID } from 'node:crypto';
 import http from 'node:http';
-import { stringify } from 'node:querystring';
-
-const database = [];
 
 const server = http.createServer((req, res) => {
   const { method, url } = req;
