@@ -1,32 +1,34 @@
 import { randomUUID } from 'node:crypto';
 import http from 'node:http';
+import { json } from './middlewares/json.js';
+import { Database } from './database.js';
 
-const server = http.createServer((req, res) => {
+const database = new Database();
+
+const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
-  if (method === 'GET' && url === '/categorias') {
-    const categoria = {
-      id: randomUUID(),
-      nome: 'investimenos',
-    };
+  await json(req, res);
 
-    return res.setHeader('Content-Type', 'application/json').end(JSON.stringify(categoria));
+  if (method === 'GET' && url === '/categorias') {
+    const categoria = database.select('categorias');
+
+    return res.end(JSON.stringify(categoria));
   }
 
   if (method === 'POST' && url === '/categorias') {
+    const { nome } = req.body;
+
     const categoriaId = randomUUID();
 
     const categoria = {
       id: categoriaId,
-      nome: 'transporte',
+      nome,
     };
 
-    database.push(categoria);
+    database.insert('categorias', categoria);
 
-    return res
-      .setHeader('Content-Type', 'application/json')
-      .writeHead(201)
-      .end(JSON.stringify({ categoriaId }));
+    return res.writeHead(201).end(JSON.stringify({ categoriaId }));
   }
 
   return res.writeHead(404).end();
