@@ -57,6 +57,17 @@ export const routes = [
     },
   },
   {
+    method: 'GET',
+    path: buildRoutePath('/lancamentos'),
+    handler: (req, res) => {
+      const { tipo } = req.query;
+
+      const releases = database.select('lancamentos', tipo ? { tipo } : null);
+
+      return res.end(JSON.stringify({ releases }));
+    },
+  },
+  {
     method: 'POST',
     path: buildRoutePath('/lancamentos'),
     handler: (req, res) => {
