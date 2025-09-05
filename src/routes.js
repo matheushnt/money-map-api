@@ -29,7 +29,11 @@ export const routes = [
         nome,
       };
 
-      database.insert('categorias', categoria);
+      const result = database.insert('categorias', categoria);
+
+      if (!result?.success) {
+        return res.writeHead(400).end(JSON.stringify({ error: result.error ?? 'Insert failed' }));
+      }
 
       return res.writeHead(201).end(JSON.stringify({ id: categoriaId }));
     },
@@ -50,6 +54,31 @@ export const routes = [
       database.delete('categorias', req.params.id);
 
       return res.writeHead(204).end();
+    },
+  },
+  {
+    method: 'POST',
+    path: buildRoutePath('/lancamentos'),
+    handler: (req, res) => {
+      const { tipo, valor, data, categoriaId } = req.body;
+
+      const releaseId = randomUUID();
+
+      const release = {
+        id: releaseId,
+        tipo,
+        valor,
+        data,
+        categoriaId,
+      };
+
+      const result = database.insert('lancamentos', release);
+
+      if (!result?.success) {
+        return res.writeHead(400).end(JSON.stringify({ error: result.error ?? 'Insert failed' }));
+      }
+
+      return res.writeHead(201).end(JSON.stringify({ id: releaseId }));
     },
   },
 ];

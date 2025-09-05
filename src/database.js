@@ -34,13 +34,29 @@ export class Database {
   }
 
   insert(table, data) {
-    if (Array.isArray(this.#database[table])) {
-      this.#database[table].push(data);
-    } else {
-      this.#database[table] = [data];
-    }
+    try {
+      if (table === 'lancamentos') {
+        const categories = this.#database['categorias'] ?? [];
 
-    this.#persist();
+        const categoryExists = categories.find((row) => row.id === data.categoriaId);
+
+        if (!categoryExists) {
+          return { success: false, error: 'Category not found.' };
+        }
+      }
+
+      if (Array.isArray(this.#database[table])) {
+        this.#database[table].push(data);
+      } else {
+        this.#database[table] = [data];
+      }
+
+      this.#persist();
+
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error: 'Internal error' };
+    }
   }
 
   update(table, id, data) {
