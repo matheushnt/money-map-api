@@ -22,20 +22,16 @@ export const routes = [
     handler: (req, res) => {
       const { nome } = req.body;
 
-      const categoriaId = randomUUID();
+      const categoryId = randomUUID();
 
-      const categoria = {
-        id: categoriaId,
+      const category = {
+        id: categoryId,
         nome,
       };
 
-      const result = database.insert('categorias', categoria);
+      database.insert('categorias', category);
 
-      if (!result?.success) {
-        return res.writeHead(400).end(JSON.stringify({ error: result.error ?? 'Insert failed' }));
-      }
-
-      return res.writeHead(201).end(JSON.stringify({ id: categoriaId }));
+      return res.writeHead(201).end(JSON.stringify({ id: categoryId }));
     },
   },
   {
