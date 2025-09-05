@@ -92,4 +92,13 @@ export const routes = [
       return res.writeHead(201).end(JSON.stringify({ id: releaseId }));
     },
   },
+  {
+    method: 'PUT',
+    path: buildRoutePath('/lancamentos/:id'),
+    handler: (req, res) => {
+      database.update('lancamentos', req.params.id, req.body);
+
+      return res.writeHead(204).end();
+    },
+  },
 ];
