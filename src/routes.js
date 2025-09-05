@@ -101,4 +101,13 @@ export const routes = [
       return res.writeHead(204).end();
     },
   },
+  {
+    method: 'DELETE',
+    path: buildRoutePath('/lancamentos/:id'),
+    handler: (req, res) => {
+      database.delete('lancamentos', req.params.id);
+
+      return res.writeHead(204).end();
+    },
+  },
 ];
