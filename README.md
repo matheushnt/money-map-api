@@ -24,8 +24,8 @@ O diagrama abaixo mostra o fluxo básico de uma requisição HTTP até a camada 
 ```mermaid
 flowchart LR
   Client["Cliente (HTTP)"] -->|Request| Server["Servidor Node.js (http.createServer)"]
-  Server --> JSONMW["Middleware: json()\nparse body + set header"]
-  JSONMW --> Routes["Router: match por RegExp\n(buildRoutePath)"]
+  Server --> JSONMW["Middleware: json() parse body + set header"]
+  JSONMW --> Routes["Router: match por RegExp (buildRoutePath)"]
   Routes --> Handlers["Handlers de Rotas"]
   Handlers --> DB[("Database (db.json)")]
   DB --> Handlers
