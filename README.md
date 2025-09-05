@@ -102,7 +102,7 @@ Lançamento:
 {
   "id": "uuid",
   "tipo": "receita" | "despesa",
-  "valor": number,
+  "valor": number, (valor salvo em centavos)
   "data": "YYYY-MM-DD",
   "categoriaId": "uuid"
 }
