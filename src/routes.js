@@ -110,4 +110,29 @@ export const routes = [
       return res.writeHead(204).end();
     },
   },
+  {
+    method: 'GET',
+    path: buildRoutePath('/saldo'),
+    handler: (req, res) => {
+      const releases = database.select('lancamentos');
+
+      const totalRevenues = releases
+        .filter((release) => release.tipo === 'receita')
+        .reduce((total, revenue) => {
+          return total + revenue.valor;
+        }, 0);
+
+      const totalExpenses = releases
+        .filter((release) => release.tipo === 'despesa')
+        .reduce((total, expense) => {
+          return total + expense.valor;
+        }, 0);
+
+      const saldo = totalRevenues - totalExpenses;
+
+      return res.end(
+        JSON.stringify({ totalReceitas: totalRevenues, totalDespesas: totalExpenses, saldo }),
+      );
+    },
+  },
 ];
