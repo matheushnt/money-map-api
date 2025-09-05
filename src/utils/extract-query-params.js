@@ -1,10 +1,3 @@
-//  '?search=Joaquim&page=2'
-
-// ['search=Joaquim', 'page=2']
-
-// ['search', 'Joaquim']
-// ['page', '2']
-
 export function extractQueryParams(query) {
   return query
     .substring(1)
