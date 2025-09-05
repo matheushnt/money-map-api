@@ -73,6 +73,16 @@ export const routes = [
     handler: (req, res) => {
       const { tipo, valor, data, categoriaId } = req.body;
 
+      const categories = database.select('categorias');
+
+      console.log(categories);
+
+      const categoryExists = categories.find((row) => row.id === categoriaId);
+
+      if (!categoryExists) {
+        return res.writeHead(404).end(JSON.stringify({ message: 'Category not found.' }));
+      }
+
       const releaseId = randomUUID();
 
       const release = {
@@ -83,11 +93,7 @@ export const routes = [
         categoriaId,
       };
 
-      const result = database.insert('lancamentos', release);
-
-      if (!result?.success) {
-        return res.writeHead(400).end(JSON.stringify({ error: result.error ?? 'Insert failed' }));
-      }
+      database.insert('lancamentos', release);
 
       return res.writeHead(201).end(JSON.stringify({ id: releaseId }));
     },

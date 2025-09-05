@@ -34,29 +34,13 @@ export class Database {
   }
 
   insert(table, data) {
-    try {
-      if (table === 'lancamentos') {
-        const categories = this.#database['categorias'] ?? [];
-
-        const categoryExists = categories.find((row) => row.id === data.categoriaId);
-
-        if (!categoryExists) {
-          return { success: false, error: 'Category not found.' };
-        }
-      }
-
-      if (Array.isArray(this.#database[table])) {
-        this.#database[table].push(data);
-      } else {
-        this.#database[table] = [data];
-      }
-
-      this.#persist();
-
-      return { success: true, data };
-    } catch (error) {
-      return { success: false, error: 'Internal error' };
+    if (Array.isArray(this.#database[table])) {
+      this.#database[table].push(data);
+    } else {
+      this.#database[table] = [data];
     }
+
+    this.#persist();
   }
 
   update(table, id, data) {
